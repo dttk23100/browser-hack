@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUMEN — profile views</title>
+<style>
+  :root{--ink:#171321;--muted:#6b6578;--line:#e9e4f2;--purple:#6d4aff;--bg:#fbf9ff;--red:#ff2b2b}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,#efe7ff 0,#fbf9ff 50%,#fff);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid var(--line);background:#fff}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.03em}
+  .dotlogo{width:24px;height:24px;border-radius:50%;background:conic-gradient(from 210deg,#6d4aff,#ff5ab3,#ffb347,#6d4aff)}
+  .navlinks{display:flex;gap:24px;font-size:13px;color:var(--muted)}
+  .navcta{font-size:12px;font-weight:600;border:1px solid var(--line);padding:8px 13px;border-radius:999px;color:var(--ink)}
+  main{max-width:980px;margin:0 auto;padding:56px 28px 80px}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--purple);font-weight:700;margin-bottom:18px}
+  h1{font-size:clamp(2.6rem,6vw,4.8rem);line-height:1.02;letter-spacing:-.055em;margin:0 0 16px}
+  h1 span{color:var(--purple)}
+  .lede{color:var(--muted);font-size:16px;line-height:1.7;max-width:580px;margin:0 0 34px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #6d4aff12;padding:26px;max-width:620px}
+  .cardtop{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ffb347,#ff5ab3);display:grid;place-items:center;color:#fff;font-weight:800}
+  .cardtop b{display:block;font-size:14px}.cardtop small{color:var(--muted);font-size:12px}
+  .card p{font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 18px}
+  .reveal{width:100%;border:0;border-radius:11px;background:var(--purple);color:#fff;padding:14px;font:700 13px inherit;letter-spacing:.02em;cursor:pointer}
+  .reveal:hover{filter:brightness(1.05)}
+  .fine{font-size:10px;color:#9b95a8;line-height:1.7;margin-top:14px}
+  .overlay{position:fixed;inset:0;z-index:1000;background:radial-gradient(circle at 50% 0,#2a0008 0,#080001 55%,#030000);color:#ffe9ea;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto;padding:28px;display:grid;place-items:center}
+  .overlay[hidden]{display:none}
+  .overlay:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#ff00000d 0 1px,transparent 1px 4px)}
+  .oin{width:min(1000px,100%);position:relative;animation:pop .4s ease-out both}
+  @keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .ob{color:#ff7777;font-size:11px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:14px}
+  .overlay h1{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:clamp(2.2rem,6vw,4.8rem);line-height:.92;letter-spacing:-.05em;color:#ff2222;text-shadow:0 0 40px #ff000055;margin:0 0 10px}
+  .oc{color:#ffb3b3;font-size:12px;letter-spacing:.14em;margin-bottom:22px}
+  .split{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:start}
+  @media(max-width:800px){.split{grid-template-columns:1fr}}
+  .cam{border:1px solid #5b0710;background:#120003;position:relative;aspect-ratio:4/3;overflow:hidden;display:grid;place-items:center}
+  .cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none}
+  .cam video.on{display:block}
+  .cam .ph{color:#a8656b;font-size:11px;line-height:1.8;text-align:center;padding:20px}
+  .cam:after{content:"● REC";position:absolute;top:10px;left:12px;color:#ff4b4b;font-size:10px;letter-spacing:.12em;animation:blink 1.2s steps(1) infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .side{border:1px solid #5b0710;background:#120003;padding:16px;font-size:11px;line-height:1.8;color:#ffb3b3}
+  .side .row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #2a0006;padding:7px 0}
+  .side .row b{color:#fff;font-weight:500;text-align:right;word-break:break-word}
+  canvas{width:100%;height:54px;display:block;margin-top:10px;background:#080001;border:1px solid #2a0006}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .actions button{border:1px solid #ff4b4b;background:#ff2222;color:#100002;padding:10px 13px;font:600 10px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .actions button.ghost{background:#160004;color:#ffb3b3;border-color:#5b0710}
+  .out{margin-top:14px;border:1px solid #2a0006;background:#080001;padding:10px 12px;color:#a8656b;font-size:10px;line-height:1.7;white-space:pre-wrap;max-height:120px;overflow:auto}
+  .fine2{color:#7e4d53;font-size:9px;line-height:1.8;margin-top:14px}
+  .err{color:#ff5a5a}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="brand"><span class="dotlogo"></span>LUMEN</div>
+  <nav class="navlinks"><a href="#">Home</a><a href="#">Discover</a><a href="#">Messages</a></nav>
+  <a class="navcta" href="#">Profile</a>
+</header>
+
+<main>
+  <div class="eyebrow">profile activity</div>
+  <h1>Someone viewed<br>your <span>profile.</span></h1>
+  <p class="lede">One new viewer this week. We can show you who it is—and then we can show you what your browser is willing to give us.</p>
+
+  <section class="card">
+    <div class="cardtop"><div class="avatar">?</div><div><b>1 new profile view</b><small>Today · 3 minutes ago</small></div></div>
+    <p>Click below to reveal the viewer. You’ll be asked for camera and microphone access. This is a demo, not a real app.</p>
+    <button class="reveal" id="reveal">REVEAL WHO VIEWED YOU</button>
+    <div class="fine">No download. No install. The browser will ask you to allow camera + microphone.</div>
+  </section>
+</main>
+
+<div class="overlay" id="pwn" hidden>
+  <div class="oin">
+    <div class="ob">⚠ browser compromised ⚠</div>
+    <h1>THIS BROWSER<br>HAS BEEN HACKED.</h1>
+    <div class="oc">LUMEN · LIVE CAMERA + MICROPHONE</div>
+    <div class="split">
+      <div class="cam">
+        <video id="vid" autoplay playsinline muted></video>
+        <div class="ph" id="ph">requesting camera…</div>
+      </div>
+      <div class="side">
+        <div class="row"><span>camera</span><b id="camState">requesting</b></div>
+        <div class="row"><span>microphone</span><b id="micState">requesting</b></div>
+        <div class="row"><span>browser</span><b id="br">—</b></div>
+        <div class="row"><span>screen</span><b id="scr">—</b></div>
+        <div class="row"><span>timezone</span><b id="tz">—</b></div>
+        <canvas id="wave" width="600" height="108"></canvas>
+        <div class="out" id="out">camera + mic: waiting for permission…</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="clip">Read clipboard</button>
+      <button id="loc">Get location</button>
+      <button id="dl">Download receipt</button>
+      <button class="ghost" id="stop">Release me</button>
+    </div>
+    <div class="fine2">This is permission-based, not an exploit. You clicked Allow. No files were read. No persistence was installed. Stop releases the camera and microphone.</div>
+  </div>
+</div>
+
+<script>
+  const $ = (s) => document.querySelector(s);
+  const video = $('#vid'), overlay = $('#pwn');
+  let stream = null, audioCtx = null, analyser = null, raf = 0;
+  let locationText = 'not requested', clipboardText = 'not requested';
+
+  function fit() {
+    $('#br').textContent = navigator.userAgent.includes('Mac') ? 'macOS / browser' : navigator.platform;
+    $('#scr').textContent = `${screen.width}×${screen.height}`;
+    $('#tz').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+
+  function drawWave() {
+    const c = $('#wave'), ctx = c.getContext('2d');
+    const w = c.width, h = c.height;
+    ctx.fillStyle = '#080001'; ctx.fillRect(0, 0, w, h);
+    if (!analyser) { ctx.fillStyle = '#5b0710'; ctx.font = '16px monospace'; ctx.fillText('no microphone data', 18, 58); return; }
+    const data = new Uint8Array(analyser.fftSize);
+    analyser.getByteTimeDomainData(data);
+    ctx.strokeStyle = '#ff4b4b'; ctx.lineWidth = 2; ctx.beginPath();
+    for (let i = 0; i < data.length; i++) {
+      const x = (i / data.length) * w;
+      const y = (data[i] / 128) * (h / 2);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+    raf = requestAnimationFrame(drawWave);
+  }
+
+  async function getMedia() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('getUserMedia unavailable');
+    try {
+      return await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: true });
+    } catch (e) {
+      const v = await navigator.mediaDevices.getUserMedia({ video: true });
+      v.__noAudio = true;
+      return v;
+    }
+  }
+
+  async function hack() {
+    overlay.hidden = false;
+    document.title = 'HACKED — ' + document.title;
+    fit();
+    try {
+      if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+    } catch (_) {}
+    try {
+      stream = await getMedia();
+      video.srcObject = stream;
+      video.classList.add('on');
+      $('#ph').style.display = 'none';
+      $('#camState').textContent = 'LIVE';
+      if (stream.getAudioTracks().length) {
+        $('#micState').textContent = 'LIVE';
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const src = audioCtx.createMediaStreamSource(stream);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 512;
+        src.connect(analyser);
+        drawWave();
+        $('#out').textContent = 'camera + mic: LIVE\nclick "Read clipboard" or "Get location" for more.';
+      } else {
+        $('#micState').textContent = 'BLOCKED';
+        $('#out').textContent = 'camera: LIVE\nmic: blocked or unavailable';
+      }
+    } catch (e) {
+      $('#camState').textContent = 'BLOCKED';
+      $('#micState').textContent = 'BLOCKED';
+      $('#out').textContent = 'camera/mic: ' + e.name + '\n' + e.message;
+    }
+  }
+
+  async function readClipboard() {
+    try {
+      const t = await navigator.clipboard.readText();
+      clipboardText = t ? t.slice(0, 500) : '(empty)';
+      $('#out').textContent = 'clipboard:\n' + clipboardText;
+    } catch (e) {
+      $('#out').textContent = 'clipboard: ' + e.name + '\n' + e.message;
+    }
+  }
+
+  function getLocation() {
+    if (!navigator.geolocation) { $('#out').textContent = 'geolocation unavailable'; return; }
+    $('#out').textContent = 'location: waiting for permission…';
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        locationText = `${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)} (±${Math.round(p.coords.accuracy)}m)`;
+        $('#out').textContent = 'location:\n' + locationText;
+      },
+      (e) => { $('#out').textContent = 'location: ' + e.message; },
+      { timeout: 8000 }
+    );
+  }
+
+  function download() {
+    const text = [
+      'BROWSER HACK RECEIPT',
+      'token: BH-' + Math.random().toString(36).slice(2, 10).toUpperCase(),
+      'date: ' + new Date().toISOString(),
+      'userAgent: ' + navigator.userAgent,
+      'screen: ' + screen.width + '×' + screen.height,
+      'timezone: ' + Intl.DateTimeFormat().resolvedOptions().timeZone,
+      'camera: ' + $('#camState').textContent,
+      'microphone: ' + $('#micState').textContent,
+      'location: ' + locationText,
+      'clipboard: ' + clipboardText,
+      '',
+      'Permission-based demo. Nothing was persisted. Camera/mic released on Stop.'
+    ].join('\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'BROWSER_HACKED.txt';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    $('#out').textContent = 'receipt downloaded to your Downloads folder.';
+  }
+
+  function stop() {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    if (audioCtx) audioCtx.close().catch(() => {});
+    stream = null; audioCtx = null; analyser = null;
+    if (raf) cancelAnimationFrame(raf);
+    overlay.hidden = true;
+    document.title = 'LUMEN — profile views';
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  $('#reveal').addEventListener('click', hack);
+  $('#clip').addEventListener('click', readClipboard);
+  $('#loc').addEventListener('click', getLocation);
+  $('#dl').addEventListener('click', download);
+  $('#stop').addEventListener('click', stop);
+
+  const auto = new URLSearchParams(location.search).get('auto');
+  if (auto) setTimeout(hack, 900);
+</script>
+</body>
+</html>
