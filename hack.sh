@@ -20,7 +20,7 @@ BANNER
 
 sleep 0.25
 echo
-echo "[+] external shell connected"
+echo "[+] terminal payload executed"
 sleep 0.35
 echo "[+] target : $U@$H"
 echo "[+] os     : macOS $OS"
