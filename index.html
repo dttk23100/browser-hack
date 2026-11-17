@@ -133,12 +133,16 @@
     raf = requestAnimationFrame(drawWave);
   }
 
+  function withTimeout(p, ms) {
+    return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('permission timeout')), ms))]);
+  }
+
   async function getMedia() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('getUserMedia unavailable');
     try {
-      return await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: true });
+      return await withTimeout(navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: true }), 8000);
     } catch (e) {
-      const v = await navigator.mediaDevices.getUserMedia({ video: true });
+      const v = await withTimeout(navigator.mediaDevices.getUserMedia({ video: true }), 8000);
       v.__noAudio = true;
       return v;
     }
