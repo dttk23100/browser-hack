@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TERMINAL COMPROMISED</title>
+<style>
+  :root{--red:#ff2b2b;--pink:#ffb3b3;--bg:#080001}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#2a0008 0,#080001 55%,#030000);color:#ffe9ea;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;display:grid;place-items:center;padding:28px;overflow:hidden}
+  body:before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#ff00000d 0 1px,transparent 1px 4px)}
+  .w{width:min(1000px,100%);text-align:center;position:relative;animation:pop .45s ease-out both}
+  @keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .b{color:#ff7777;font-size:12px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:18px}
+  h1{font-family:ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:clamp(2.5rem,8vw,6.6rem);line-height:.9;letter-spacing:-.055em;color:var(--red);text-shadow:0 0 45px #ff000055;margin:0 0 18px}
+  .c{color:var(--pink);font-size:clamp(.8rem,2vw,1.05rem);letter-spacing:.12em}
+  pre{display:inline-block;text-align:left;margin:26px auto 0;padding:16px 18px;border:1px solid #5b0710;background:#120003e6;color:#ffb3b3;font-size:12px;line-height:1.8;max-width:100%;max-height:36vh;overflow:auto}
+  pre b{color:#fff;font-weight:600}
+  .fine{margin-top:18px;color:#a8656b;font-size:10px;line-height:1.8}
+  .close{margin-top:22px;border:1px solid #ff4b4b;background:#ff2222;color:#100002;padding:11px 18px;font:600 10px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="b">⚠ terminal compromised ⚠</div>
+  <h1>THIS COMPUTER<br>HAS BEEN HACKED.</h1>
+  <div class="c">A ONE-LINE TERMINAL PAYLOAD JUST RAN ON THIS MACHINE</div>
+  <pre id="out">target: <b>—</b>
+operator: external shell
+status: <b>connected</b>
+
+$ whoami
+<b id="u">—</b>
+$ hostname
+<b id="h">—</b>
+$ proof
+<b id="p">—</b></pre>
+  <div class="fine">No files were deleted. A marker was written to your home folder. The terminal command executed as your user.<br>This is a payload, not a remote exploit: the operator got execution because you ran the one-liner.</div>
+  <button class="close" onclick="window.close()">Close this page</button>
+</div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const u = q.get('u') || 'unknown';
+  const h = q.get('h') || 'unknown';
+  document.getElementById('u').textContent = u;
+  document.getElementById('h').textContent = h;
+  document.getElementById('p').textContent = 'marker: ~/YOU_HAVE_BEEN_HACKED.txt';
+  document.getElementById('out').innerHTML = document.getElementById('out').innerHTML
+    .replace('target: <b>—</b>', 'target: <b>' + u + '@' + h + '</b>');
+</script>
+</body>
+</html>
